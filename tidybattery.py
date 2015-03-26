@@ -20,15 +20,39 @@
 import gtk
 import gobject
 import subprocess
+import os
+import argparse
 
 ACPI_CMD = 'acpi'
 TIMEOUT = 2
 
+b = {}
+b['empty'] = {'icon': 'battery-empty', 'charge_icon': 'battery-empty-charging', 'percent': 10}
+b['caution'] = {'icon': 'battery-caution', 'charge_icon': 'battery-caution-charging', 'percent': 20}
+b['low'] = {'icon': 'battery-low', 'charge_icon': 'battery-low-charging', 'percent': 40}
+b['fair'] = {'icon': 'battery-fair', 'charge_icon': 'battery-fair-charging', 'percent': 60}
+b['good'] = {'icon': 'battery-good', 'charge_icon': 'battery-good-charging', 'percent': 80}
+b['full'] = {'icon': 'battery-full', 'charge_icon': 'battery-full-charging', 'percent': 100}
+b['full_adapter'] = {'icon': 'gnome-power-manager', 'percent': 100}
+
 class MainApp:
         def __init__(self):
+                self.last_icon = {}
+                parser = argparse.ArgumentParser()
+                parser.add_argument("-c", "--command", help='The command to run when left-clicking on the battery status icon.')
+                self.args = vars(parser.parse_args())
                 self.icon = gtk.StatusIcon()
+                self.icon.set_from_stock(gtk.STOCK_HOME)
+                self.icon.connect('activate', self.left_click)
                 self.update_icon()
                 gobject.timeout_add_seconds(TIMEOUT,self.update_icon)
+
+        def left_click(self, icon):
+                if 'command' in self.args:
+                        os.system(self.args['command'])
+                else:
+                        notify = 'notify-send -i "battery" -t 10000 "{title}" "{description}"'
+                        os.system(notify.format(title='Command not specified', description='To be able to left click on the status icon, you must specify a command to run on left click of the icon using the -c flag.'))
 
         def get_battery_info(self):
                 text = subprocess.check_output(ACPI_CMD).strip('\n')
@@ -38,36 +62,36 @@ class MainApp:
                                 'tooltip':""
                                 }
                 data = text.split(',')
-                return {'state':data[0].split(':')[1].strip(' '),
-                                'percentage':int(data[1].strip(' %')),
-                                'tooltip': text.split(':',1)[1][1:]
+                state = data[0].split(':')[1].strip(' ')
+                percentage_str = data[1].strip(' %')
+                percentage = int(percentage_str)
+                time = data[2].split(' ')[1]
+                return {'state':state,
+                                'percentage':percentage,
+                                'tooltip': 'Battery is ' + state + ' (' + percentage_str + '%)\n ' + time + ' remaining',
+																'time': time,
                                 }
 
-        def get_icon_name(self, state, percentage):
-                if state == 'Discharging':
-                        if percentage < 10:
-                                return 'battery_empty'
-                        elif percentage < 20:
-                                return 'battery_caution'
-                        elif percentage < 40:
-                                return 'battery_low'
-                        elif percentage < 60:
-                                return 'battery_two_thirds'
-                        elif percentage < 75:
-                                return 'battery_third_fouth'
-                        else:
-                                return 'battery_full'
-                elif state == 'Charged':
-                        return 'battery_charged'
-                elif state == 'Unknown':
-                        return 'dialog-question'
-                else:
-                        return 'battery_plugged'
+        def get_icon(self, state, percentage):
+                icon = b['full']
+                icon['state'] = 'icon'
+                if state == 'Full':
+                        icon = b['full_adapter']
+                        icon['state'] = 'icon'
+                        return icon
+                for key in b:
+                        if percentage <= b[key]['percent'] and key != 'full_adapter':
+                                icon = b[key]
+                                if state == 'Discharging':
+                                        icon['state'] = 'icon'
+                                else:
+                                        icon['state'] = 'charge_icon'
+                return icon
 
         def update_icon(self):
                 info = self.get_battery_info()
-                icon_name = self.get_icon_name(info['state'],info['percentage'])
-                self.icon.set_from_icon_name(icon_name)
+                icon = self.get_icon(info['state'],info['percentage'])
+                self.icon.set_from_icon_name(icon[icon['state']])
                 self.icon.set_tooltip_text(info['tooltip'])
                 return True
 
@@ -77,5 +101,3 @@ if __name__ == "__main__":
                 gtk.main()
         except KeyboardInterrupt:
                 pass
-
-
