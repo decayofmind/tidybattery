@@ -9,7 +9,7 @@ Put into your path, as an example the following would work
 cd [path/where/tidybattery/will/live]
 git clone https://github.com/nalipaz/tidybattery.git
 cd tidybattery
-sudo ln -s `pwd`/tidybattery.py /usr/bin/tidybattery1
+sudo ln -s `pwd`/tidybattery.py /usr/bin/tidybattery
 ```
 Create a config file at `~/.tidybattery`, just run the following to generate a default config file which you could modify if needed:
 ```
@@ -54,3 +54,7 @@ percent = 95
 icon = gnome-power-manager
 percent = 100
 ```
+
+### Starting tidybattery
+
+Just run `tidybattery &`.  You can also put it into your startups so it is automatically running after reboots.
