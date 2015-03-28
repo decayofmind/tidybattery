@@ -11,7 +11,11 @@ git clone https://github.com/nalipaz/tidybattery.git
 cd tidybattery
 sudo ln -s `pwd`/tidybattery.py /usr/bin/tidybattery1
 ```
-Create a config file at `~/.tidybattery`, here is a default one you could use:
+Create a config file at `~/.tidybattery`, just run the following to generate a default config file which you could modify if needed:
+```
+echo -e "[general]\ncommand = xfce4-power-manager-settings\n\n[empty]\nicon = battery-empty\ncharge_icon = battery-empty-charging\npercent = 0\n\n[caution]\nicon = battery-caution\ncharge_icon = battery-caution-charging\npercent = 10\n\n[low]\nicon = battery-low\ncharge_icon = battery-low-charging\npercent = 20\n\n[fair]\nicon = battery-fair\ncharge_icon = battery-fair-charging\npercent = 45\n\n[good]\nicon = battery-good\ncharge_icon = battery-good-charging\npercent = 70\n\n[full]\nicon = battery-full\ncharge_icon = battery-full-charging\npercent = 95\n\n[full_adapter]\nicon = gnome-power-manager\npercent = 100" > ~/.tidybattery
+```
+Alternatively, you can copy the config file below and edit as you need:
 ```
 [general]
 command = xfce4-power-manager-settings
@@ -49,8 +53,4 @@ percent = 95
 [full_adapter]
 icon = gnome-power-manager
 percent = 100
-```
-Edit the above for your needs.  Alternatively, just run the following to generated a default config file:
-```
-echo -e "[general]\ncommand = xfce4-power-manager-settings\n\n[empty]\nicon = battery-empty\ncharge_icon = battery-empty-charging\npercent = 0\n\n[caution]\nicon = battery-caution\ncharge_icon = battery-caution-charging\npercent = 10\n\n[low]\nicon = battery-low\ncharge_icon = battery-low-charging\npercent = 20\n\n[fair]\nicon = battery-fair\ncharge_icon = battery-fair-charging\npercent = 45\n\n[good]\nicon = battery-good\ncharge_icon = battery-good-charging\npercent = 70\n\n[full]\nicon = battery-full\ncharge_icon = battery-full-charging\npercent = 95\n\n[full_adapter]\nicon = gnome-power-manager\npercent = 100" > ~/.tidybattery
 ```
