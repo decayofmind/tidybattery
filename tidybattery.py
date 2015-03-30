@@ -21,12 +21,19 @@ import gtk
 import gobject
 import subprocess
 import os
+import sys
 import ConfigParser
 
 ACPI_CMD = 'acpi'
 TIMEOUT = 2
 config = False
 config_path = os.path.expanduser('~/.tidybattery')
+
+try:
+    subprocess.check_output(ACPI_CMD).strip('\n')
+except OSError:
+   print "It seems like you have no acpi utility installed or it's not available through your PATH."
+   exit
 
 try:
     with open(config_path) as f:
@@ -38,7 +45,7 @@ try:
                 b[key] = config._sections[key]
                 b[key]['percent'] = int(b[key]['percent'])
 except IOError:
-    print 'There must be a config file (~/.tidybattery) setup.  See the README.md for documentation.'
+    print "There must be a config file (~/.tidybattery) setup.  See the README.md for documentation."
     exit
 
 if config:
