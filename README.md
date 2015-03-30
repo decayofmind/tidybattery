@@ -11,7 +11,7 @@ Of course, you'll need Python 2.6+ as well.
 Put into your path, as an example the following would work
 ```
 cd [path/where/tidybattery/will/live]
-git clone https://github.com/nalipaz/tidybattery.git
+git clone https://github.com/decayofmind/tidybattery.git
 cd tidybattery
 sudo ln -s `pwd`/tidybattery.py /usr/bin/tidybattery
 ```
