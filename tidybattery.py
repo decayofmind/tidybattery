@@ -30,10 +30,10 @@ config = False
 config_path = os.path.expanduser('~/.tidybattery')
 
 try:
-    subprocess.check_output(ACPI_CMD).strip('\n')
+    subprocess.check_output(ACPI_CMD)
 except OSError:
-   print "It seems like you have no acpi utility installed or it's not available through your PATH."
-   exit
+    print "It seems like you have no acpi utility installed or it's not available through your PATH."
+    sys.exit(2)
 
 try:
     with open(config_path) as f:
@@ -46,7 +46,7 @@ try:
                 b[key]['percent'] = int(b[key]['percent'])
 except IOError:
     print "There must be a config file (~/.tidybattery) setup.  See the README.md for documentation."
-    exit
+    sys.exit(2)
 
 if config:
     class MainApp:
