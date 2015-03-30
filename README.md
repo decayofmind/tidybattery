@@ -3,6 +3,10 @@ tidybattery
 
 Lightweight GTK tray battery monitor. The original project by [decayofmind](https://github.com/decayofmind/tidybattery) is a fork of [slimebattery](https://github.com/Enrix835/slimebattery) rewritten in Python.  This project is a fork of that with additions of more levels of icon notification and enabling of clicking on the icon to launch a custom command (like the command for the system power manager).
 
+## Requirements
+Tidybattery uses acpi command to parse battery status, so you need it installed.
+Of course, you'll need Python 2.6+ as well.
+
 ## Setup
 Put into your path, as an example the following would work
 ```
